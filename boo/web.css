@@ -1,0 +1,22 @@
+/* Boo in a browser (html.web, set by platform-web.js). The browser draws the window
+   buttons, and some things a browser can't do are hidden. */
+.web .window-controls,
+.web #search-scope .segment[data-scope="everywhere"] { display: none !important; }
+
+/* Installed as an app, Boo's toolbar is the title bar; the browser's own buttons sit
+   at its right end. */
+@media (display-mode: window-controls-overlay) {
+  .web #toolbar {
+    padding-right: calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw) + 8px);
+  }
+}
+
+/* Shown when the browser needs your OK to open your files again after a restart. */
+.web-access {
+  position: fixed;
+  left: 50%;
+  bottom: 44px;
+  transform: translateX(-50%);
+  z-index: 50;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+}

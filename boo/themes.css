@@ -1,0 +1,170 @@
+/* Editor themes. Like a Sublime color scheme, each sets the editor's background,
+   text and syntax colors; the rest of the window keeps Boo's iOS look. The default,
+   Xcode, has no block here: it is the light/dark palette in styles.css.
+   A theme applies wherever data-editor-theme is set: the editor area, and the
+   preview cards in the theme picker. */
+
+[data-editor-theme] {
+  --selection-match: rgba(127, 127, 127, 0.22);
+  --search-match: rgba(255, 214, 10, 0.28);
+  --search-match-border: rgba(255, 214, 10, 0.55);
+  --search-match-current: rgba(255, 159, 10, 0.6);
+}
+
+/* Sublime Text's default color scheme. */
+[data-editor-theme="mariana"] {
+  color-scheme: dark;
+  --editor: #303841; --editor-text: #d8dee9; --editor-gutter: #65737e;
+  --current-line: rgba(255, 255, 255, 0.05); --text-selection: rgba(78, 90, 101, 0.9);
+  --syntax-keyword: #c695c6; --syntax-string: #99c794; --syntax-regexp: #5fb4b4; --syntax-number: #f9ae58;
+  --syntax-comment: #a6acb9; --syntax-type: #fac863; --syntax-declaration: #5fb4b4; --syntax-function: #5fb4b4;
+  --syntax-variable: #f97b58; --syntax-attribute: #fac863; --syntax-tag: #f97b58; --syntax-preprocessor: #c695c6;
+  --syntax-link: #6699cc; --syntax-heading: #6699cc; --syntax-invalid: #ec5f66; --syntax-inserted: #99c794; --syntax-deleted: #ec5f66;
+}
+
+[data-editor-theme="monokai"] {
+  color-scheme: dark;
+  --editor: #272822; --editor-text: #f8f8f2; --editor-gutter: #90908a;
+  --current-line: #3e3d32; --text-selection: #49483e;
+  --syntax-keyword: #f92672; --syntax-string: #e6db74; --syntax-regexp: #e6db74; --syntax-number: #ae81ff;
+  --syntax-comment: #88846f; --syntax-type: #66d9ef; --syntax-declaration: #a6e22e; --syntax-function: #a6e22e;
+  --syntax-variable: #fd971f; --syntax-attribute: #a6e22e; --syntax-tag: #f92672; --syntax-preprocessor: #f92672;
+  --syntax-link: #66d9ef; --syntax-heading: #e6db74; --syntax-invalid: #f44747; --syntax-inserted: #a6e22e; --syntax-deleted: #f92672;
+}
+
+[data-editor-theme="dracula"] {
+  color-scheme: dark;
+  --editor: #282a36; --editor-text: #f8f8f2; --editor-gutter: #6272a4;
+  --current-line: rgba(68, 71, 90, 0.5); --text-selection: #44475a;
+  --syntax-keyword: #ff79c6; --syntax-string: #f1fa8c; --syntax-regexp: #ff5555; --syntax-number: #bd93f9;
+  --syntax-comment: #6272a4; --syntax-type: #8be9fd; --syntax-declaration: #50fa7b; --syntax-function: #50fa7b;
+  --syntax-variable: #ffb86c; --syntax-attribute: #50fa7b; --syntax-tag: #ff79c6; --syntax-preprocessor: #ff79c6;
+  --syntax-link: #8be9fd; --syntax-heading: #bd93f9; --syntax-invalid: #ff5555; --syntax-inserted: #50fa7b; --syntax-deleted: #ff5555;
+}
+
+[data-editor-theme="one-dark"] {
+  color-scheme: dark;
+  --editor: #282c34; --editor-text: #abb2bf; --editor-gutter: #4b5263;
+  --current-line: #2c313c; --text-selection: #3e4451;
+  --syntax-keyword: #c678dd; --syntax-string: #98c379; --syntax-regexp: #56b6c2; --syntax-number: #d19a66;
+  --syntax-comment: #7f848e; --syntax-type: #e5c07b; --syntax-declaration: #61afef; --syntax-function: #61afef;
+  --syntax-variable: #e06c75; --syntax-attribute: #d19a66; --syntax-tag: #e06c75; --syntax-preprocessor: #c678dd;
+  --syntax-link: #61afef; --syntax-heading: #e06c75; --syntax-invalid: #ff5555; --syntax-inserted: #98c379; --syntax-deleted: #e06c75;
+}
+
+[data-editor-theme="nord"] {
+  color-scheme: dark;
+  --editor: #2e3440; --editor-text: #d8dee9; --editor-gutter: #4c566a;
+  --current-line: #3b4252; --text-selection: #434c5e;
+  --syntax-keyword: #81a1c1; --syntax-string: #a3be8c; --syntax-regexp: #ebcb8b; --syntax-number: #b48ead;
+  --syntax-comment: #616e88; --syntax-type: #8fbcbb; --syntax-declaration: #88c0d0; --syntax-function: #88c0d0;
+  --syntax-variable: #d08770; --syntax-attribute: #8fbcbb; --syntax-tag: #81a1c1; --syntax-preprocessor: #5e81ac;
+  --syntax-link: #88c0d0; --syntax-heading: #88c0d0; --syntax-invalid: #bf616a; --syntax-inserted: #a3be8c; --syntax-deleted: #bf616a;
+}
+
+[data-editor-theme="github-dark"] {
+  color-scheme: dark;
+  --editor: #0d1117; --editor-text: #e6edf3; --editor-gutter: #6e7681;
+  --current-line: #161b22; --text-selection: rgba(56, 139, 253, 0.35);
+  --syntax-keyword: #ff7b72; --syntax-string: #a5d6ff; --syntax-regexp: #7ee787; --syntax-number: #79c0ff;
+  --syntax-comment: #8b949e; --syntax-type: #ffa657; --syntax-declaration: #d2a8ff; --syntax-function: #d2a8ff;
+  --syntax-variable: #ffa657; --syntax-attribute: #79c0ff; --syntax-tag: #7ee787; --syntax-preprocessor: #ff7b72;
+  --syntax-link: #58a6ff; --syntax-heading: #79c0ff; --syntax-invalid: #ffa198; --syntax-inserted: #7ee787; --syntax-deleted: #ffa198;
+}
+
+[data-editor-theme="github-light"] {
+  color-scheme: light;
+  --editor: #ffffff; --editor-text: #1f2328; --editor-gutter: #8c959f;
+  --current-line: #f6f8fa; --text-selection: rgba(84, 174, 255, 0.3);
+  --syntax-keyword: #cf222e; --syntax-string: #0a3069; --syntax-regexp: #116329; --syntax-number: #0550ae;
+  --syntax-comment: #6e7781; --syntax-type: #953800; --syntax-declaration: #8250df; --syntax-function: #8250df;
+  --syntax-variable: #953800; --syntax-attribute: #0550ae; --syntax-tag: #116329; --syntax-preprocessor: #cf222e;
+  --syntax-link: #0969da; --syntax-heading: #0550ae; --syntax-invalid: #82071e; --syntax-inserted: #116329; --syntax-deleted: #82071e;
+}
+
+[data-editor-theme="solarized-light"] {
+  color-scheme: light;
+  --editor: #fdf6e3; --editor-text: #586e75; --editor-gutter: #93a1a1;
+  --current-line: #eee8d5; --text-selection: rgba(38, 139, 210, 0.2);
+  --syntax-keyword: #859900; --syntax-string: #2aa198; --syntax-regexp: #dc322f; --syntax-number: #d33682;
+  --syntax-comment: #93a1a1; --syntax-type: #b58900; --syntax-declaration: #268bd2; --syntax-function: #268bd2;
+  --syntax-variable: #cb4b16; --syntax-attribute: #b58900; --syntax-tag: #268bd2; --syntax-preprocessor: #cb4b16;
+  --syntax-link: #6c71c4; --syntax-heading: #cb4b16; --syntax-invalid: #dc322f; --syntax-inserted: #859900; --syntax-deleted: #dc322f;
+}
+
+[data-editor-theme="solarized-dark"] {
+  color-scheme: dark;
+  --editor: #002b36; --editor-text: #93a1a1; --editor-gutter: #586e75;
+  --current-line: #073642; --text-selection: rgba(38, 139, 210, 0.35);
+  --syntax-keyword: #859900; --syntax-string: #2aa198; --syntax-regexp: #dc322f; --syntax-number: #d33682;
+  --syntax-comment: #586e75; --syntax-type: #b58900; --syntax-declaration: #268bd2; --syntax-function: #268bd2;
+  --syntax-variable: #cb4b16; --syntax-attribute: #b58900; --syntax-tag: #268bd2; --syntax-preprocessor: #cb4b16;
+  --syntax-link: #6c71c4; --syntax-heading: #cb4b16; --syntax-invalid: #dc322f; --syntax-inserted: #859900; --syntax-deleted: #dc322f;
+}
+
+/* ---------- Theme picker ---------- */
+
+.theme-popover { width: 420px; padding: 4px 16px 16px; max-height: calc(100vh - 80px); overflow-y: auto; }
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.theme-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+  text-align: left;
+}
+
+.theme-sample {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--editor);
+  color: var(--editor-text);
+  font: 11px/1.55 var(--font-mono);
+  white-space: pre;
+  overflow: hidden;
+  box-shadow: 0 0 0 0.5px var(--separator);
+}
+
+.theme-card[aria-checked="true"] .theme-sample { box-shadow: 0 0 0 2.5px var(--blue); }
+.theme-card:focus-visible { outline: none; }
+.theme-card:focus-visible .theme-sample { box-shadow: 0 0 0 2.5px var(--blue); }
+
+.theme-name {
+  padding-left: 2px;
+  color: var(--label);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.theme-card[aria-checked="true"] .theme-name { color: var(--blue); font-weight: 600; }
+
+.theme-sample .k { color: var(--syntax-keyword); font-weight: 600; }
+.theme-sample .f { color: var(--syntax-function); }
+.theme-sample .s { color: var(--syntax-string); }
+.theme-sample .n { color: var(--syntax-number); }
+.theme-sample .c { color: var(--syntax-comment); font-style: italic; }
+.theme-sample .v { color: var(--syntax-variable); }
+
+.stepper {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  background: var(--fill);
+}
+
+.stepper button {
+  width: 40px;
+  height: 30px;
+  font-size: 18px;
+}
+
+.stepper button:disabled { color: var(--label-3); }
+.stepper span { min-width: 44px; text-align: center; font-size: 13px; font-variant-numeric: tabular-nums; }
+.stepper button + span, .stepper span + button { border-left: 0.5px solid var(--separator); }

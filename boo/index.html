@@ -1,81 +1,171 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Boo Notes</title>
-<meta name="description" content="Boo is a notes app and text editor for Windows and Android that keeps every note, even unsaved ones, and syncs them through your own Google Drive.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="boo.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://www.googleapis.com https://oauth2.googleapis.com http://127.0.0.1:*; img-src 'self' data: blob:; worker-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Boo</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="themes.css">
+  <link rel="stylesheet" href="rich.css">
+  <link rel="stylesheet" href="mobile.css">
+  <link rel="stylesheet" href="web.css">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#2b2b2b">
 </head>
 <body>
+  <header id="toolbar">
+    <div class="window-controls" id="window-controls" role="group" aria-label="Window">
+      <button class="traffic close" id="window-close" title="Close" aria-label="Close window"></button>
+      <button class="traffic minimize" id="window-minimize" title="Minimize" aria-label="Minimize window"></button>
+      <button class="traffic maximize" id="window-maximize" title="Maximize" aria-label="Maximize window"></button>
+    </div>
+    <button class="logo-button" id="guide-button" title="Boo Guide: how to use Boo" aria-label="Open the Boo Guide">
+      <canvas class="boo-logo" role="img" aria-label="Boo"></canvas>
+    </button>
+    <div class="toolbar-group">
+      <button class="icon-button" id="toggle-sidebar" data-icon="sidebar" title="Show or hide the sidebar (Ctrl+K, Ctrl+B)" aria-label="Toggle sidebar"></button>
+      <button class="icon-button" id="find-in-files" data-icon="search" title="Find in Files (Ctrl+Shift+F) · Goto Anything (Ctrl+P)" aria-label="Find in Files"></button>
+    </div>
+    <div id="tabs" role="tablist"></div>
+    <div class="toolbar-group">
+      <button class="icon-button" id="new" data-icon="compose" title="New note (Ctrl+N)" aria-label="New note"></button>
+      <button class="icon-button" id="templates" data-icon="template" title="New note from a template (Ctrl+Shift+N)" aria-label="New note from a template"></button>
+      <button class="icon-button" id="open" data-icon="open" title="Open file (Ctrl+O)" aria-label="Open file"></button>
+      <button class="icon-button" id="save" data-icon="save" title="Save (Ctrl+S) · Save As (Ctrl+Shift+S)" aria-label="Save"></button>
+      <button class="icon-button" id="emoji" data-icon="emoji" title="Emoji (Ctrl+Shift+E)" aria-label="Insert emoji"></button>
+      <button class="icon-button" id="settings" data-icon="settings" title="Settings" aria-label="Settings"></button>
+    </div>
+  </header>
 
-<header class="nav">
-  <div class="wrap">
-    <a href="../" class="logo"><span class="logo-mark display">E</span><span class="txt">Portfolio</span></a>
-    <nav>
-      <a href="#features">Features</a>
-      <a href="#sync">Sync</a>
-      <a href="privacy.html">Privacy</a>
-    </nav>
-  </div>
-</header>
+  <main id="layout">
+    <aside id="sidebar" aria-label="Sidebar">
+      <div class="segmented sidebar-switcher" id="sidebar-switcher" role="tablist">
+        <button class="segment" data-view="folders" role="tab">Folders</button>
+        <button class="segment" data-view="search" role="tab">Search</button>
+        <button class="segment" data-view="tags" role="tab">Tags</button>
+      </div>
 
-<main>
-  <div class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <p class="sticker mono">● Windows · Android</p>
-        <h1 class="display">Boo <mark>Notes</mark></h1>
-        <p class="sub">A notes app and text editor that never loses a note. Close it, crash it, switch devices: every tab is still there, saved or not.</p>
-        <div class="cta">
-          <a href="#features" class="btn">What it does →</a>
-          <a href="privacy.html" class="btn alt">Privacy policy</a>
+      <section class="sidebar-view" id="folders-view">
+        <div class="sidebar-header">
+          <span class="sidebar-title">Folders</span>
+          <button class="text-button" id="add-folder" title="Add a folder to the sidebar">Add Folder</button>
+        </div>
+        <div id="tree" role="tree"></div>
+        <div id="sidebar-empty" hidden>
+          <div class="empty-icon" data-icon="open"></div>
+          <p>Add a folder to browse and open its files here.</p>
+          <button class="filled-button" id="add-folder-empty">Add Folder</button>
+          <p class="empty-hint">You can also drop a folder onto the window.</p>
+        </div>
+      </section>
+
+      <section class="sidebar-view" id="search-view" hidden>
+        <div class="sidebar-header">
+          <span class="sidebar-title">Search</span>
+        </div>
+        <div class="search-form">
+          <div class="segmented" id="search-scope" role="radiogroup" aria-label="Where to search">
+            <button class="segment" data-scope="tab" role="radio" title="The current tab, including unsaved text">This Tab</button>
+            <button class="segment" data-scope="folder" role="radio" title="The sidebar folders, or the current file's folder">Folder</button>
+            <button class="segment" data-scope="everywhere" role="radio" title="Every drive on this computer">Everywhere</button>
+          </div>
+          <div class="search-box">
+            <span class="find-glass"></span>
+            <input id="search-query" placeholder="Find" spellcheck="false" aria-label="Find">
+          </div>
+          <div class="search-options">
+            <div class="find-toggles" id="search-toggles"></div>
+            <button class="text-button" id="toggle-replace" aria-expanded="false">Replace…</button>
+          </div>
+          <div class="search-box" id="where-row">
+            <span class="where-label">Where</span>
+            <input id="search-where" spellcheck="false" aria-label="Where" placeholder="Folders, <open folders>, *.sql, -*.log">
+            <button class="where-button" id="where-menu" title="Add a folder or filter" aria-label="Add to Where">+</button>
+          </div>
+          <div class="search-replace" id="replace-row" hidden>
+            <div class="search-box">
+              <span class="find-replace-icon"></span>
+              <input id="search-replace" placeholder="Replace with" spellcheck="false" aria-label="Replace with">
+            </div>
+            <button class="text-button" id="replace-in-files" title="Open matching files with the replacements made, unsaved">Replace</button>
+          </div>
+          <button class="filled-button" id="search-go">Find</button>
+        </div>
+        <div id="search-status" role="status"></div>
+        <div id="search-results"></div>
+      </section>
+
+      <section class="sidebar-view" id="tags-view" hidden>
+        <div class="sidebar-header">
+          <span class="sidebar-title">Tags</span>
+        </div>
+        <div id="tags-list-view">
+          <div class="search-box tags-filter">
+            <span class="find-glass"></span>
+            <input id="tags-filter" placeholder="Filter tags" spellcheck="false" aria-label="Filter tags">
+          </div>
+          <div id="tags-status"></div>
+          <div id="tags-list"></div>
+        </div>
+        <div id="tag-detail" hidden></div>
+      </section>
+    </aside>
+    <div id="splitter" role="separator" aria-orientation="vertical" title="Drag to resize"></div>
+    <section id="document">
+      <div id="editor-host"></div>
+      <div id="image-view" hidden>
+        <img id="image" alt="">
+      </div>
+      <div id="rich-host" hidden>
+        <div id="rich-toolbar" role="toolbar" aria-label="Formatting"></div>
+        <div id="rich-table-bar" role="toolbar" aria-label="Table" hidden></div>
+        <div id="rich-scroll"></div>
+      </div>
+      <div id="loading-view" hidden>
+        <div class="loading-card">
+          <div class="loading-title" id="loading-title"></div>
+          <div class="progress"><div class="progress-bar" id="loading-bar"></div></div>
+          <div class="loading-detail" id="loading-detail"></div>
+          <button class="text-button" id="cancel-load">Cancel</button>
         </div>
       </div>
-      <div class="ghost-card box" aria-hidden="true">
-        <svg data-sprite="ghost"></svg>
-        <p class="mono">Boo walks along the bottom of the window. He's shy.</p>
-      </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
-  <section id="features">
-    <div class="wrap">
-      <p class="label mono">FEATURES</p>
-      <h2 class="display">Built like Sublime, looks like iOS.</h2>
-      <div class="grid">
-        <article class="card box"><h3 class="display">Nothing is lost</h3><p>Every tab, including notes you never saved, comes back after you quit or the app crashes.</p></article>
-        <article class="card box"><h3 class="display">Rich text</h3><p>Fonts, colours, lists, tables pasted from Excel, symbols and screenshots pasted straight into the note.</p></article>
-        <article class="card box"><h3 class="display">Find anything</h3><p>Find in a note, in a folder or across every drive, with tags, Goto Anything and syntax colouring for 140 languages.</p></article>
-        <article class="card box"><h3 class="display">Huge files</h3><p>Opens a 150 MB log in about two seconds. The Windows app is a 6 MB download that runs from a USB stick.</p></article>
-      </div>
-    </div>
-  </section>
+  <footer id="status">
+    <span id="status-text"></span>
+    <span class="status-controls">
+      <span id="cursor-position"></span>
+      <button class="pill" id="language" title="Syntax used for coloring"></button>
+      <button class="pill" id="encoding" title="Change the encoding used when saving"></button>
+      <button class="pill" id="line-ending" title="Change the line endings used when saving"></button>
+    </span>
+  </footer>
 
-  <section id="sync" class="band">
-    <div class="wrap two">
-      <div>
-        <p class="label mono">SYNC</p>
-        <h2 class="display">Your notes, your Drive.</h2>
-      </div>
-      <div class="box panel">
-        <p>Sign in with Google in Boo's Settings and your notes are kept in a <b>Boo Notes</b> folder in your own Google Drive, so Boo on your laptop, tablet and phone shows the same notes.</p>
-        <p>Boo asks Google only for access to the files it creates itself. It can't see anything else in your Drive, and your notes never pass through any server of ours. See the <a href="privacy.html">privacy policy</a>.</p>
-      </div>
-    </div>
-  </section>
-</main>
+  <div id="boo-walker" aria-hidden="true" hidden></div>
 
-<footer>
-  <div class="wrap">
-    <span>© 2026 E. Boo Notes.</span>
-    <span class="mono"><a href="privacy.html">Privacy policy</a> · <a href="mailto:eironatix@gmail.com">eironatix@gmail.com</a></span>
-  </div>
-</footer>
+  <div id="overlay-root"></div>
 
-<script src="ghost.js"></script>
+  <script src="platform-web.js"></script>
+  <script src="vendor/editor.js"></script>
+  <script src="lib/pixelpals.js"></script>
+  <script src="icons.js"></script>
+  <script src="dialogs.js"></script>
+  <script src="services.js"></script>
+  <script src="emoji.js"></script>
+  <script src="sidebar.js"></script>
+  <script src="search-view.js"></script>
+  <script src="tags-view.js"></script>
+  <script src="goto.js"></script>
+  <script src="rich-notes.js"></script>
+  <script src="templates.js"></script>
+  <script src="guide.js"></script>
+  <script src="sync.js"></script>
+  <script src="reminders.js"></script>
+  <script src="boo.js"></script>
+  <script src="renderer.js"></script>
 </body>
 </html>
