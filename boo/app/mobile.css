@@ -1,0 +1,75 @@
+/* Boo on Android tablets and phones (html.android, set by platform.js). There are
+   no windows to move or close, files live in Boo's own storage, and on a phone the
+   sidebar slides over the note instead of sitting beside it. */
+
+.android .window-controls,
+.android #open,
+.android #save,
+.android #splitter,
+.android .segment[data-view="folders"],
+.android #search-scope .segment[data-scope="folder"],
+.android #search-scope .segment[data-scope="everywhere"],
+.android #where-row,
+.android #toggle-replace,
+.android #encoding,
+.android #line-ending { display: none !important; }
+
+/* Clear the status bar and the gesture bar, which Android draws over the app. */
+.android body {
+  padding-top: var(--inset-top, 0px);
+  padding-bottom: var(--inset-bottom, 0px);
+  box-sizing: border-box;
+}
+
+.android #toolbar { padding: 0 8px; gap: 4px; }
+
+/* The splitter is hidden (and on phones the sidebar floats), so the note is placed
+   in its column explicitly instead of filling the first free one. */
+.android #document { grid-column: 3; }
+.android .icon-button { width: 40px; height: 40px; padding: 8px; }
+.android .tab { height: 34px; }
+.android .tab .close { opacity: 1; }
+
+/* Touch targets in lists and the formatting bar. */
+.android .list-row,
+.android .tag-row,
+.android .result-line { min-height: 40px; }
+
+.android #rich-toolbar {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.android #rich-toolbar::-webkit-scrollbar { display: none; }
+.android .rich-group { flex: 0 0 auto; }
+
+@media (max-width: 760px) {
+  /* Tabs get a row of their own under the buttons. */
+  .android #toolbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    row-gap: 6px;
+  }
+
+  .android #toolbar > .toolbar-group:last-of-type { margin-left: auto; }
+  .android #tabs { order: 10; flex: 1 0 100%; margin: 0; }
+  .android .tab { max-width: 60vw; }
+
+  .android .rich-page { padding: 16px 16px 120px; }
+  .android #cursor-position { display: none; }
+
+  /* The sidebar slides in over the note. */
+  .android #layout { grid-template-columns: 0 0 1fr; position: relative; }
+  .android #sidebar {
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: 20;
+    width: min(88vw, 380px);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+    visibility: visible;
+  }
+  .android #layout.sidebar-hidden #sidebar { visibility: hidden; }
+}

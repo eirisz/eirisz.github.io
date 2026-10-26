@@ -1,0 +1,23 @@
+{
+  "name": "Boo",
+  "short_name": "Boo",
+  "description": "Notes and a text editor in the style of Sublime Text, with hot exit, folders, Find in Files, tags, reminders and Google Drive sync.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#1e1e1e",
+  "theme_color": "#2b2b2b",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "file_handlers": [
+    {
+      "action": "./",
+      "accept": { "text/plain": [".txt", ".md", ".log", ".sql", ".json", ".csv", ".ini", ".xml", ".yaml", ".yml"] }
+    }
+  ]
+}

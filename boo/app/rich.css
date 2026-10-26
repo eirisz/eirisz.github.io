@@ -1,0 +1,363 @@
+/* Rich text notes: the formatting toolbar, the note page and its pickers. The page
+   uses the editor theme's background and text colors, so it follows dark mode. */
+
+#rich-host {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--editor);
+}
+
+#rich-toolbar,
+#rich-table-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 6px 12px;
+  background: var(--toolbar);
+  border-bottom: 0.5px solid var(--separator);
+  user-select: none;
+}
+
+#rich-table-bar { padding: 4px 12px; }
+
+.rich-table-title {
+  color: var(--label-2);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.rich-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.rich-group + .rich-group {
+  padding-left: 10px;
+  border-left: 0.5px solid var(--separator);
+}
+
+.rich-button {
+  display: grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 5px;
+  border-radius: 7px;
+  color: var(--label);
+  font: 15px var(--font-ui);
+}
+
+.rich-button svg { width: 19px; height: 19px; }
+.rich-button:hover { background: var(--fill); }
+.rich-button:active { opacity: 0.6; }
+.rich-button[aria-pressed="true"] { background: color-mix(in srgb, var(--blue) 18%, transparent); color: var(--blue); }
+.rich-button.text { min-width: 0; padding: 0 8px; font-size: 12px; font-weight: 500; }
+
+.rich-button.bold { font-weight: 800; }
+.rich-button.italic { font-style: italic; font-family: Georgia, serif; }
+.rich-button.underline { text-decoration: underline; text-underline-offset: 3px; }
+.rich-button.double-underline { text-decoration: underline double; text-underline-offset: 3px; }
+.rich-button.strike { text-decoration: line-through; }
+.rich-button.symbol { font-size: 16px; }
+
+/* The text and highlight color buttons show the current color as a bar. */
+.rich-button.color {
+  font-weight: 700;
+  box-shadow: inset 0 -4px 0 -1px var(--swatch, var(--editor-text));
+}
+
+.rich-button.highlight svg path:last-child { stroke: var(--swatch, transparent); }
+
+.rich-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: var(--width);
+  height: 30px;
+  padding: 0 8px 0 10px;
+  border-radius: 8px;
+  background: var(--fill);
+  color: var(--label);
+  font: 13px var(--font-ui);
+}
+
+.rich-dropdown:hover { background: var(--fill-strong); }
+
+.rich-dropdown-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.rich-dropdown-chevron { color: var(--label-2); font-size: 10px; }
+
+#rich-scroll {
+  flex: 1;
+  overflow: auto;
+}
+
+/* ---------- The note page ---------- */
+
+.rich-page { padding: 28px 48px 120px; }
+
+.rich-document {
+  max-width: 860px;
+  min-height: 60vh;
+  margin: 0 auto;
+  outline: none;
+  color: var(--editor-text);
+  font-family: 'Segoe UI', var(--font-ui);
+  font-size: 11pt;
+  line-height: 1.55;
+  caret-color: var(--blue);
+  overflow-wrap: break-word;
+}
+
+.rich-document > * + * { margin-top: 0.6em; }
+.rich-document p { margin: 0; }
+.rich-document p + p { margin-top: 0.45em; }
+.rich-document h1 { font-size: 2em; font-weight: 700; line-height: 1.2; margin: 0.6em 0 0.3em; }
+.rich-document h2 { font-size: 1.5em; font-weight: 700; line-height: 1.25; margin: 0.9em 0 0.3em; }
+.rich-document h3 { font-size: 1.2em; font-weight: 600; line-height: 1.3; margin: 0.9em 0 0.3em; }
+.rich-document > :first-child { margin-top: 0; }
+.rich-document a { color: var(--blue); }
+.rich-document u.double { text-decoration-style: double; }
+.rich-document mark { border-radius: 3px; padding: 0 1px; box-shadow: none; color: inherit; }
+.rich-document ::selection { background: var(--text-selection); }
+
+.rich-document ul,
+.rich-document ol { padding-left: 1.6em; margin: 0.4em 0; }
+.rich-document li > p { margin: 0.1em 0; }
+
+.rich-document ul[data-type="taskList"] { list-style: none; padding-left: 0.2em; }
+.rich-document ul[data-type="taskList"] li { display: flex; align-items: flex-start; gap: 0.5em; }
+.rich-document ul[data-type="taskList"] li > label { margin-top: 0.2em; }
+.rich-document ul[data-type="taskList"] li > div { flex: 1; }
+.rich-document ul[data-type="taskList"] li[data-checked="true"] > div { color: var(--label-2); text-decoration: line-through; }
+.rich-document ul[data-type="taskList"] input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--blue); }
+
+.rich-document blockquote {
+  margin: 0.6em 0;
+  padding: 0.1em 0 0.1em 1em;
+  border-left: 3px solid var(--fill-strong);
+  color: var(--label-2);
+}
+
+.rich-document code {
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: var(--fill);
+  font: 0.9em var(--font-mono);
+}
+
+.rich-document pre {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--fill);
+  font: 0.9em/1.5 var(--font-mono);
+  white-space: pre-wrap;
+}
+
+.rich-document pre code { padding: 0; background: none; }
+.rich-document hr { border: none; border-top: 1px solid var(--separator); margin: 1.2em 0; }
+
+.rich-document img {
+  display: block;
+  max-width: 100%;
+  margin: 0.4em 0;
+  border-radius: 8px;
+}
+
+.rich-document img.ProseMirror-selectednode { outline: 3px solid var(--blue); }
+
+/* Tables, with column resizing and cell selection. */
+.rich-document table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0.6em 0;
+  overflow: hidden;
+}
+
+.rich-document td,
+.rich-document th {
+  position: relative;
+  min-width: 2em;
+  padding: 6px 10px;
+  border: 1px solid var(--separator);
+  vertical-align: top;
+  box-sizing: border-box;
+}
+
+.rich-document th { background: var(--fill); font-weight: 600; text-align: left; }
+.rich-document td > p, .rich-document th > p { margin: 0; }
+
+.rich-document .selectedCell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--blue) 18%, transparent);
+  pointer-events: none;
+}
+
+.rich-document .column-resize-handle {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  bottom: -2px;
+  width: 4px;
+  background: var(--blue);
+  pointer-events: none;
+}
+
+.rich-document .tableWrapper { overflow-x: auto; }
+.rich-document.resize-cursor { cursor: col-resize; }
+
+/* ---------- Pickers ---------- */
+
+.color-popover { width: 260px; padding: 4px 14px 14px; }
+
+.color-clear {
+  width: 100%;
+  height: 30px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  background: var(--fill);
+  font-size: 13px;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.color-swatch {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.25);
+}
+
+.color-swatch:hover { transform: scale(1.1); }
+.color-swatch.selected { box-shadow: 0 0 0 2px var(--material), 0 0 0 4px var(--blue); }
+
+.color-custom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  color: var(--label-2);
+  font-size: 13px;
+}
+
+.color-custom input { width: 44px; height: 28px; border: none; background: none; }
+
+.table-popover { padding: 10px 14px 12px; }
+.table-picker-label { padding-bottom: 8px; font-size: 13px; font-weight: 600; text-align: center; }
+
+.table-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 18px);
+  gap: 3px;
+  justify-content: center;
+}
+
+.table-picker-cell {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  background: var(--fill);
+  box-shadow: inset 0 0 0 0.5px var(--separator);
+}
+
+.table-picker-cell.on { background: color-mix(in srgb, var(--blue) 45%, transparent); }
+
+.symbol-popover { width: 360px; max-height: min(460px, calc(100vh - 100px)); overflow-y: auto; padding: 0 12px 12px; }
+
+.symbol-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 2px;
+}
+
+.symbol-cell {
+  height: 34px;
+  border-radius: 7px;
+  font: 17px var(--font-ui);
+}
+
+.symbol-cell:hover { background: var(--fill); }
+
+/* ---------- The Boo Guide (read-only) ---------- */
+
+.rich-page.guide .rich-document {
+  max-width: 720px;
+  caret-color: transparent;
+}
+
+.rich-page.guide .rich-document h1 { font-size: 2.2em; }
+.rich-page.guide .rich-document h2 {
+  padding-top: 0.6em;
+  border-top: 0.5px solid var(--separator);
+  color: var(--blue);
+  font-size: 1.25em;
+}
+
+.rich-page.guide .rich-document table { width: auto; min-width: 70%; }
+.rich-page.guide .rich-document td:first-child { white-space: nowrap; font-weight: 600; }
+
+/* ---------- #hashtags and reminders in rich notes ---------- */
+
+.rich-document .rich-hashtag {
+  padding: 1px 4px;
+  margin: 0 -1px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--tag-color) 16%, transparent);
+  color: color-mix(in srgb, var(--tag-color) 80%, var(--editor-text));
+  font-weight: 600;
+}
+
+.rich-document .reminder {
+  display: inline-block;
+  padding: 0 7px;
+  margin: 0 2px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--orange) 16%, transparent);
+  color: color-mix(in srgb, var(--orange) 75%, var(--editor-text));
+  font-size: 0.92em;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+
+.rich-document .reminder:hover { background: color-mix(in srgb, var(--orange) 26%, transparent); }
+.rich-document .reminder.done { background: var(--fill); color: var(--label-2); text-decoration: line-through; }
+.rich-document .reminder.ProseMirror-selectednode { outline: 2px solid var(--blue); }
+
+.reminder-popover { width: 280px; padding: 0 14px 14px; }
+.reminder-quick { display: flex; flex-direction: column; gap: 2px; }
+.reminder-choice {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: left;
+}
+.reminder-choice:hover { background: var(--fill); }
+.reminder-choice-when { color: var(--label-2); }
+.reminder-fields { display: grid; grid-template-columns: 1.3fr 1fr; gap: 8px; }
+.reminder-fields .alert-input { width: 100%; margin: 0; box-sizing: border-box; }
+.reminder-popover .filled-button { width: 100%; margin-top: 10px; }
+.reminder-extra { width: 100%; margin-top: 6px; padding: 7px; border-radius: 8px; background: var(--fill); color: var(--blue); font-size: 13px; }
+.reminder-extra.destructive { color: var(--red, #ff3b30); }
