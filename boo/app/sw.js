@@ -1,7 +1,7 @@
 // Boo's offline worker: keeps the app's own files so Boo opens without a network,
 // and serves pictures in notes (boo-image/...), which the page reads from your
 // folders or from Boo's storage in the browser.
-const VERSION = '6.0.0-057dcb9146';
+const VERSION = '6.0.0-59053dc722';
 const CACHE = `boo-${VERSION}`;
 const FILES = ["./","boo.js","dialogs.js","emoji.js","goto.js","guide.js","icons.js","icons/apple-touch-icon.png","icons/favicon-32.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png","index.html","lib/pixelpals.js","manifest.webmanifest","mobile.css","platform-web.js","reminders.js","renderer.js","rich-notes.js","rich.css","search-view.js","services.js","sidebar.js","styles.css","sync.js","tags-view.js","templates.js","themes.css","vendor/editor.js","vendor/rich.js","vendor/web-worker.js","web.css"];
 const BASE = new URL('./', self.location).href;

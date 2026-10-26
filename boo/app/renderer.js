@@ -578,7 +578,7 @@ function revealMatch(at) {
   }
 }
 
-async function open() {
+async function openFiles() {
   for (const file of await window.boo.chooseFiles()) await openPath(file);
 }
 
@@ -1129,7 +1129,7 @@ document.addEventListener('keydown', (event) => {
   const actions = {
     k: () => { chordStartedAt = Date.now(); },
     n: () => openNewNote(),
-    o: open,
+    o: openFiles,
     s: () => save({ saveAs: event.shiftKey }),
     w: () => closeBuffer(selected),
     p: () => Goto.open(''),
@@ -1175,7 +1175,7 @@ for (const button of document.querySelectorAll('[data-icon]')) button.innerHTML 
 document.getElementById('toggle-sidebar').addEventListener('click', toggleSidebar);
 document.getElementById('new').addEventListener('click', () => openNewNote());
 document.getElementById('templates').addEventListener('click', (event) => Templates.choose(event.currentTarget));
-document.getElementById('open').addEventListener('click', open);
+document.getElementById('open').addEventListener('click', openFiles);
 document.getElementById('save').addEventListener('click', () => save());
 document.getElementById('find-in-files').addEventListener('click', () => SearchView.open());
 document.getElementById('emoji').addEventListener('click', openEmoji);

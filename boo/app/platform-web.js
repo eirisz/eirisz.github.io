@@ -550,6 +550,8 @@
   // ---------- Google Drive sync (the sync itself is renderer/sync.js) ----------
 
   const SCOPE = 'https://www.googleapis.com/auth/drive.file';
+  // The browser's own window.open, kept before the page's scripts load.
+  const openWindow = window.open.bind(window);
   let access = null;
   const syncData = async () => (await kvGet('sync')) ?? {};
   const saveSync = (data) => kvPut('sync', data);
@@ -563,6 +565,7 @@
   };
   const random = (bytes) => btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(bytes)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
+  let pendingSignIn = null;
   async function tokenRequest(form) {
     const response = await fetch('https://oauth2.googleapis.com/token', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(form) })
       .catch((error) => {
@@ -602,7 +605,7 @@
   // Google's sign-in opens in a small window and comes back to oauth.html, which
   // hands the answer to this page.
   function signIn() {
-    const popup = window.open('about:blank', 'boo-google', 'width=520,height=680');
+    const popup = openWindow('about:blank', 'boo-google', 'width=520,height=680');
     return (async () => {
       const data = await syncData();
       if (!data.clientId) throw new Error('Set up a Google Cloud client for Boo first.');
@@ -614,19 +617,25 @@
       const params = new URLSearchParams({ client_id: data.clientId, redirect_uri: redirect, response_type: 'code', scope: SCOPE, code_challenge: challenge, code_challenge_method: 'S256', access_type: 'offline', prompt: 'consent', state });
       if (!popup) throw new Error('The browser blocked the Google window; allow pop-ups for Boo and try again.');
       popup.location = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
+      // Google's pages cut the link between the two windows, so the answer comes back
+      // on a channel every Boo page of this site shares (oauth.html sends it). Closing
+      // the Google window can't be noticed; a new sign-in or 10 minutes ends the wait.
+      pendingSignIn?.(new Error('Sign-in was cancelled.'));
       const answer = await new Promise((resolve, reject) => {
-        const timer = setInterval(() => {
-          if (popup.closed) {
-            clearInterval(timer);
-            reject(new Error('Sign-in was cancelled.'));
-          }
-        }, 500);
-        window.addEventListener('message', function onMessage(event) {
-          if (event.origin !== location.origin || event.data?.type !== 'boo-oauth') return;
-          window.removeEventListener('message', onMessage);
-          clearInterval(timer);
-          resolve(new URLSearchParams(event.data.search));
-        });
+        const channel = new BroadcastChannel('boo-oauth');
+        const finish = (error, value) => {
+          channel.close();
+          clearTimeout(timer);
+          pendingSignIn = null;
+          if (error) reject(error);
+          else resolve(value);
+        };
+        const timer = setTimeout(() => finish(new Error('Sign-in timed out; please try again.')), 10 * 60 * 1000);
+        pendingSignIn = (error) => finish(error);
+        channel.onmessage = ({ data }) => {
+          const answered = new URLSearchParams(data?.search ?? '');
+          if (data?.type === 'boo-oauth' && answered.get('state') === state) finish(null, answered);
+        };
       });
       if (answer.get('error')) throw new Error(answer.get('error') === 'access_denied' ? 'Sign-in was cancelled.' : `Google said: ${answer.get('error')}`);
       if (answer.get('state') !== state) throw new Error('The sign-in answer didn’t match; please try again.');
